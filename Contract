@@ -1,0 +1,30 @@
+//SPDX-License-Identifier:GLP-3.0
+
+pragma solidity 0.8.22;
+
+// Las variables uint están en ether pero en el contrato real serán en GFI.
+contract specialRewards {
+    uint256 public balanceInversor = 0 ether;
+    uint256 public balanceRequerido = 10 ether;
+    uint256 public fondosFaltantes = 0 ether;
+    uint256 public recompensa = 0.5 ether;
+
+    // La función devuelve la cantidad de GFI del inversor.
+    function chequearBalance() public returns(uint) {
+        balanceInversor = msg.sender.balance;
+        return balanceInversor;
+    }
+
+    // La función verifica si el inversor tiene los fondos requeridos para obtener la recompensa y le avisa al inversor.
+    function mensajeAviso() public view returns (string memory) {
+        require(balanceInversor >= balanceRequerido, "No aporto los suficientes fondos para obtener la recompensa");
+        return ("Usted puede reclamar sus GFI de recompensa");
+    }
+
+    // La función le permite al inversor reclamar su recompensa. Como el contrato aún no tiene fondos, no va a funcionar.
+    function claimGFI() public payable {
+        require (balanceInversor >= balanceRequerido, "No aporto los suficientes fondos para obtener la recompensa");
+        payable(msg.sender).transfer(recompensa);
+    }
+
+}
